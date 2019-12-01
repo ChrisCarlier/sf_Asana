@@ -11,23 +11,28 @@ body{
  */
 .project-card{
     margin: 4px;
-    height: 50px;
+    height: 60px;
+    box-shadow: 2px 2px #868686;
 }
 .project-card:hover{
-    transform: scale(1.1);
+    transform: scale(1.05);
     cursor: pointer;
 }
 .project-card:hover>a{
-    font-weight: 600;
     color:#718C00;
 }
 .project-card>a{
+    font-weight: 400;
     text-decoration: none;
     text-align: center;
     margin:auto;
-    font-weight: 200;
+    padding:5px;
     color:#C9C9C9;
-    font-size: 16px;
+    font-size: 14px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /*

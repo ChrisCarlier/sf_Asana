@@ -78,8 +78,58 @@ class ProjectController extends AbstractController
 
         return $this->render('pages/projects.html.twig',[
             'projects' => $projects,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'current_menu' => 'projects'
         ]);
     }
 
+    /**
+     * @param string $project
+     * @return array
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     *
+     */
+    public function getTasksFromProject(string $project): array
+    {
+        $fields = 'completed';
+        $tasks = [];
+        $proj_task = $this->client->request('GET', sprintf("https://app.asana.com/api/1.0/projects/%d/tasks?opt_fields[]=completed", $project),[
+            'auth_bearer' => '0/0b1b7b5d59f146cdbb5de67e5e0ad52e',
+//            'opt_fields' => ['completed']
+        ]);
+        if($proj_task->toArray()['data'] != null)
+        {
+            foreach ($proj_task->toArray()['data'] as $task)
+            {
+                array_push($tasks,$task['name']);
+            }
+        }
+        return $tasks;
+    }
+
+    /**
+     * @Route ("/project/{project}/{name}", name="projectId")
+     * @param $project
+     * @param $name
+     * @return Response
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function showProjectDetails($project, $name): Response
+    {
+        $tasks = [];
+        $tasks = $this->getTasksFromProject($project);
+
+        return $this->render('pages/projectTasks.html.twig',[
+            'name' => $name,
+            'tasks' => $tasks
+        ]);
+    }
 }

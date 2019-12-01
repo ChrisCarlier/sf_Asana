@@ -1,10 +1,15 @@
 {% extends 'base.html.twig' %}
 
-
 {% block body %}
-    <h1>Asana {{name}} - Tasks</h1>
-
-    {% for t in tasks %}
-        <p>{{ t }}</p>
-    {% endfor %}
+    <div class="container">
+        <div class="row">
+            {% for t in tasks %}
+                <div class="card-container col-lg-3">
+                        <div class="card project-card bg-dark">
+                            <a>{{ t }}</a>
+                        </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
