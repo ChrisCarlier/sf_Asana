@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h1>Asana {{name}} - Tasks</h1>
+
+    {% for t in tasks %}
+        <p>{{ t }}</p>
+    {% endfor %}
+{% endblock %}

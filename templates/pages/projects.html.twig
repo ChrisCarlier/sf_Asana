@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Asana Projects</h1>
+    <div class="container">
+            <div class="row form-search">
+                {{ form_start(form, {'attr': {'class': 'input-group'}}) }}
+                    <div class="form-control">
+                        {{ form_row(form.name) }}
+                    </div>
+                    <button class="input-group-append btn btn-info">Recherche</button>
+                {{ form_end(form) }}
+            </div>
+        <div class="row">
+            {% for p in projects %}
+                <div class="card-container col-lg-3">
+                    <div class="card project-card bg-dark ">
+                        <a href="{{ path('projectId', {project: p.gid, name: p.name}) }}">
+                            {{ p.name }}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
