@@ -3,12 +3,18 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            {% for t in tasks %}
-                <div class="card-container col-lg-3">
-                        <div class="card project-card bg-dark">
-                            <a>{{ t }}</a>
-                        </div>
+            {% for section in tasksSections %}
+                <div class="section col-12">
+                    <h4>{{ section[1] }}</h4>
+                    <div class="card-container ">
+                        {% for task in section[2] %}
+                                <div class="card project-card bg-dark">
+                                    <a>{{ task }}</a>
+                                </div>
+                        {% endfor %}
+                    </div>
                 </div>
+
             {% endfor %}
         </div>
     </div>

@@ -21,6 +21,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class ProjectController extends AbstractController
 {
     protected $client;
+    protected $privateKey;
 
     /**
      * HomeController constructor.
@@ -28,6 +29,7 @@ class ProjectController extends AbstractController
     public function __construct()
     {
         $this->client = HttpClient::create(['http_version' => '1.1']);;
+        $this->privateKey = '0/0b1b7b5d59f146cdbb5de67e5e0ad52e';
     }
 
     /**
@@ -95,41 +97,94 @@ class ProjectController extends AbstractController
      */
     public function getTasksFromProject(string $project): array
     {
-        $fields = 'completed';
+        $fields = 'name,notes';
         $tasks = [];
-        $proj_task = $this->client->request('GET', sprintf("https://app.asana.com/api/1.0/projects/%d/tasks?opt_fields[]=completed", $project),[
-            'auth_bearer' => '0/0b1b7b5d59f146cdbb5de67e5e0ad52e',
-//            'opt_fields' => ['completed']
-        ]);
-        if($proj_task->toArray()['data'] != null)
-        {
-            foreach ($proj_task->toArray()['data'] as $task)
+        try{
+            $proj_task = $this->client->request('GET', sprintf("https://app.asana.com/api/1.0/projects/%d/tasks?opt_fields=%s", $project,$fields),[
+                'auth_bearer' => $this->privateKey
+            ]);
+            if($proj_task->toArray()['data'] != null)
             {
-                array_push($tasks,$task['name']);
+                foreach ($proj_task->toArray()['data'] as $task)
+                {
+                    if(isset($task['name']))
+                        array_push($tasks,$task['name']);
+                }
             }
+        } catch (TransportExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
+
         }
+
         return $tasks;
     }
 
+    public function getSectionsFromProject(string $project): array
+    {
+        $sections = [];
+        try {
+            $projectSections = $this->client->request('GET', sprintf('https://app.asana.com/api/1.0/projects/%d/sections', $project), [
+                'auth_bearer' => $this->privateKey
+            ]);
+            if($projectSections->toArray()['data'] != null)
+            {
+                foreach ($projectSections->toArray()['data'] as $section)
+                {
+                    if(isset($section['name']))
+                        array_push($sections,[$section['gid'],$section['name']]);
+                }
+            }
+        } catch (TransportExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
+
+        }
+        return $sections;
+    }
+
+    public function getTasksFromSection(array $sections): array
+    {
+        $newSections = [];
+
+        $fields = 'name,notes';
+        try {
+            foreach ($sections as $section)
+            {
+                $tasksList = [];
+
+                $sectionGid = $section[0];
+                $tasks = $this->client->request('GET', sprintf('https://app.asana.com/api/1.0/sections/%d/tasks?opt_fields=%s', $sectionGid,$fields), [
+                    'auth_bearer' => $this->privateKey
+                ]);
+                if($tasks->toArray()['data'] != null)
+                {
+                    foreach ($tasks->toArray()['data'] as $task)
+                    {
+                        if(isset($task['name']))
+                            array_push($tasksList,$task['name']);
+                    }
+                }
+                array_push($newSections,[$section[0],$section[1],$tasksList]);
+            }
+        } catch (TransportExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
+
+        }
+        return $newSections;
+    }
+
     /**
-     * @Route ("/project/{project}/{name}", name="projectId")
+     * @Route ("/projects/{project}/{name}", name="projectId")
      * @param $project
      * @param $name
      * @return Response
-     * @throws ClientExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
      */
     public function showProjectDetails($project, $name): Response
     {
-        $tasks = [];
-        $tasks = $this->getTasksFromProject($project);
-
+        $tasksSections = [];
+//        $tasks = $this->getTasksFromProject($project);
+        $sections = $this->getSectionsFromProject($project);
+        $tasksSections = $this->getTasksFromSection($sections);
+//        dump($tasksSections);
         return $this->render('pages/projectTasks.html.twig',[
             'name' => $name,
-            'tasks' => $tasks
+            'tasksSections' => $tasksSections
         ]);
     }
 }
