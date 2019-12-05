@@ -43,7 +43,6 @@ class ProjectController extends AbstractController
         $form = $this->createForm(ProjectSearchType::class, $search);
         $form->handleRequest($request);
 
-        $count = 0;
         $projects = [];
         try {
             $response = $this->client->request('GET', 'https://app.asana.com/api/1.0/teams/1136866803053084/projects/',[
@@ -88,11 +87,6 @@ class ProjectController extends AbstractController
     /**
      * @param string $project
      * @return array
-     * @throws ClientExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
      *
      */
     public function getTasksFromProject(string $project): array
@@ -143,7 +137,7 @@ class ProjectController extends AbstractController
     {
         $newSections = [];
 
-        $fields = 'name,notes';
+        $fields = 'name,notes,completed';
         try {
             foreach ($sections as $section)
             {
@@ -151,10 +145,12 @@ class ProjectController extends AbstractController
 
                 $sectionGid = $section[0];
                 $tasks = $this->client->request('GET', sprintf('https://app.asana.com/api/1.0/sections/%d/tasks?opt_fields=%s', $sectionGid,$fields), [
-                    'auth_bearer' => $this->privateKey
+                    'auth_bearer' => $this->privateKey,
+                    'body' => ''
                 ]);
                 if($tasks->toArray()['data'] != null)
                 {
+                    dump($tasks->toArray()['data']);
                     foreach ($tasks->toArray()['data'] as $task)
                     {
                         if(isset($task['name']))
@@ -178,10 +174,8 @@ class ProjectController extends AbstractController
     public function showProjectDetails($project, $name): Response
     {
         $tasksSections = [];
-//        $tasks = $this->getTasksFromProject($project);
         $sections = $this->getSectionsFromProject($project);
         $tasksSections = $this->getTasksFromSection($sections);
-//        dump($tasksSections);
         return $this->render('pages/projectTasks.html.twig',[
             'name' => $name,
             'tasksSections' => $tasksSections

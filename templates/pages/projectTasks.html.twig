@@ -1,12 +1,17 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    <script src="{{ asset('Scripts/main.js') }}"></script>
+{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="row">
             {% for section in tasksSections %}
+                {% if section[2]|length > 0 %}
                 <div class="section col-12">
-                    <h4>{{ section[1] }}</h4>
-                    <div class="card-container ">
+                    <h4 class="collapsible title-clic">{{ section[1] }}  ({{ section[2]|length }})</h4>
+                    <div class="card-container">
                         {% for task in section[2] %}
                                 <div class="card project-card bg-dark">
                                     <a>{{ task }}</a>
@@ -14,7 +19,7 @@
                         {% endfor %}
                     </div>
                 </div>
-
+                {% endif %}
             {% endfor %}
         </div>
     </div>
