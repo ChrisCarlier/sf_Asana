@@ -9,6 +9,7 @@ use App\Entity\ProjectSearch;
 use App\Form\ProjectSearchType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -91,7 +92,7 @@ class ProjectController extends AbstractController
      */
     public function getTasksFromProject(string $project): array
     {
-        $fields = 'name,notes';
+        $fields = 'name,notes,section';
         $tasks = [];
         try{
             $proj_task = $this->client->request('GET', sprintf("https://app.asana.com/api/1.0/projects/%d/tasks?opt_fields=%s", $project,$fields),[
@@ -135,30 +136,55 @@ class ProjectController extends AbstractController
 
     public function getTasksFromSection(array $sections): array
     {
+        $response = new JsonResponse();
+        $count = 0;
         $newSections = [];
-
-        $fields = 'name,notes,completed';
+        $fields = '"name","completed"';
+        $body = '{"data": {"actions": [';
         try {
             foreach ($sections as $section)
             {
-                $tasksList = [];
-
-                $sectionGid = $section[0];
-                $tasks = $this->client->request('GET', sprintf('https://app.asana.com/api/1.0/sections/%d/tasks?opt_fields=%s', $sectionGid,$fields), [
-                    'auth_bearer' => $this->privateKey,
-                    'body' => ''
-                ]);
-                if($tasks->toArray()['data'] != null)
-                {
-                    dump($tasks->toArray()['data']);
-                    foreach ($tasks->toArray()['data'] as $task)
-                    {
-                        if(isset($task['name']))
-                            array_push($tasksList,$task['name']);
-                    }
-                }
-                array_push($newSections,[$section[0],$section[1],$tasksList]);
+                $count++;
+                $body = $body . sprintf('{"relative_path": "/sections/%d/tasks","method": "get","options": {"fields": [%s]}}',$section[0],$fields);
+                if ($count < count($sections))
+                    $body = $body . ',';
             }
+            $body = $body . ']}}';
+
+            $response->setData([
+                'auth_bearer' => $this->privateKey,
+                'body' => $body
+            ]);
+
+//            dump($response->send());
+//            $tasks = $this->client->request('POST', 'https://app.asana.com/api/1.0/batch', [
+//                        'auth_bearer' => $this->privateKey,
+//                        'Body' => $body
+//                    ]);
+//            dump($tasks->toArray()['data']);
+
+
+
+//            foreach ($sections as $section)
+//            {
+//                $tasksList = [];
+//
+//                $sectionGid = $section[0];
+//                $tasks = $this->client->request('GET', sprintf('https://app.asana.com/api/1.0/sections/%d/tasks?opt_fields=%s', $sectionGid,$fields), [
+//                    'auth_bearer' => $this->privateKey,
+//                    'body' => ''
+//                ]);
+//                if($tasks->toArray()['data'] != null)
+//                {
+//                    dump($tasks->toArray()['data']);
+//                    foreach ($tasks->toArray()['data'] as $task)
+//                    {
+//                        if(isset($task['name']))
+//                            array_push($tasksList,$task['name']);
+//                    }
+//                }
+//                array_push($newSections,[$section[0],$section[1],$tasksList]);
+//            }
         } catch (TransportExceptionInterface | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $e) {
 
         }
@@ -175,7 +201,9 @@ class ProjectController extends AbstractController
     {
         $tasksSections = [];
         $sections = $this->getSectionsFromProject($project);
-        $tasksSections = $this->getTasksFromSection($sections);
+        dump($sections);
+//        $tasksSections = $this->getTasksFromSection($sections);
+//        dump($tasksSections);
         return $this->render('pages/projectTasks.html.twig',[
             'name' => $name,
             'tasksSections' => $tasksSections

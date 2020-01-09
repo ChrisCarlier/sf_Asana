@@ -24,6 +24,17 @@
                     </li>
                 </ul>
             </div>
+{#            {% if (is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')) %}#}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="navbar-brand" href="{{ path('logout') }}">
+                    <div class="navbar-logout">
+                        {% if app.user.username is defined %}
+                            {{ app.user.username|capitalize }},
+                        {% endif %}
+                        Déconnexion
+                    </div>
+                </a>
+            {% endif %}
         </nav>
 
         {% block body %}
