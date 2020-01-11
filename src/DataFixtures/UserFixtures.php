@@ -28,6 +28,8 @@ class UserFixtures extends Fixture
         $user = new User();
         $user->setUsername('chris');
         $user->setPassword($this->encoder->encodePassword($user,'biv'));
+        $user->setEmail('cj.carlier@gmail.com');
+        $user->setRole('ROLE_ADMIN');
         $manager->persist($user);
         $manager->flush();
     }

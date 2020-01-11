@@ -105,6 +105,11 @@ class User implements UserInterface,\Serializable
         ]);
     }
 
+    public function __toString()
+    {
+        return ucfirst($this->getUsername());
+    }
+
     /**
      * @inheritDoc
      */
