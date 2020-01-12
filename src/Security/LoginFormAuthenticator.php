@@ -6,7 +6,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -69,7 +68,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Utilisateur inexistant');
+            throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
         return $user;
@@ -80,27 +79,14 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
-    /**
-     * @param Request $request
-     * @param TokenInterface $token
-     * @param string $providerKey
-     * @return Response
-     */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey) : Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-            dump("OK1");
-            dump($targetPath);
-            dump($this->getTargetPath($request->getSession(), $providerKey));
             return new RedirectResponse($targetPath);
         }
-        dump("OK2");
-        dump($targetPath);
-        dump($this->getTargetPath($request->getSession(), $providerKey));
-        return new RedirectResponse($this->urlGenerator->generate('home'));
-//        return new RedirectResponse($this->urlGenerator->generate('home'));
-//        return new RedirectResponse($this->urlGenerator->generate('home'));
+
+        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
+        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()
