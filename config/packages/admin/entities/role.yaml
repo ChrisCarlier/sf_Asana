@@ -1,0 +1,13 @@
+easy_admin:
+  entities:
+    Role:
+      class: App\Entity\Role
+#      templates:
+#        new: 'admin/user/user.html.twig'
+#        edit: 'admin/user/user.html.twig'
+      form:
+        fields:
+          - {property: 'role_key', type: 'text', label: 'Role key'}
+          - {property: 'name', type: 'text', label: 'Nom'}
+#          - {property: 'Email', type: 'email', label: 'E-mail' }
+#          - {property: 'Role', type: { block_name: 'role_selector' }, label: 'Type de compte' }

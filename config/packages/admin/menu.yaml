@@ -1,0 +1,5 @@
+easy_admin:
+  design:
+    menu:
+      - { entity: 'User', label: 'Utilisateurs', icon: 'user' }
+      - { entity: 'Rol', label: 'Role' }
