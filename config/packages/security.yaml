@@ -22,7 +22,6 @@ security:
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
-                    - App\Security\LoginFormAuthenticator
                 entry_point: App\Security\LoginFormAuthenticator
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -36,6 +35,7 @@ security:
          - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/projects, roles: ROLE_ADMIN }
          - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
 
     encoders:
         App\Entity\User:
