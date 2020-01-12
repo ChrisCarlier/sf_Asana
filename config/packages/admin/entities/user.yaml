@@ -2,11 +2,14 @@ easy_admin:
   entities:
     User:
       class: App\Entity\User
-      templates:
-        new: 'admin/user/user.html.twig'
-        edit: 'admin/user/user.html.twig'
-#      form:
-#        fields:
-#          - {property: 'Username', type: 'text', label: 'Nom utilisateur'}
-#          - {property: 'Email', type: 'email', label: 'E-mail' }
-#          - {property: 'Role', type: { block_name: 'role_selector' }, label: 'Type de compte' }
+      list:
+        fields:
+          - { property: 'Username'}
+          - { property: 'Email' }
+          - { property: 'Role' }
+
+      form:
+        fields:
+          - {property: 'username', type: 'text', label: 'Nom utilisateur'}
+          - {property: 'email', type: 'text', label: 'Email'}
+          - { property: 'role', type: 'easyadmin_autocomplete', type_options: { class: 'App\Entity\Role' } }

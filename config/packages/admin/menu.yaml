@@ -1,5 +1,14 @@
 easy_admin:
   design:
     menu:
-      - { entity: 'User', label: 'Utilisateurs', icon: 'user' }
-      - { entity: 'Rol', label: 'Role' }
+      - label: 'Gestion utilisateur'
+        children:
+          - entity: 'User'
+            label: 'Utilisateurs'
+            params: { sortField: 'username' }
+            icon: 'user'
+            default: true
+          - entity: 'Role'
+            label: 'Role'
+            icon: 'user-tag'
+            params: { sortField: 'Name' }
