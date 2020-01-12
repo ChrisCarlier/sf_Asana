@@ -4,3 +4,6 @@ home:
 
 logout:
   path: /logout
+
+admin:
+  path: /admin

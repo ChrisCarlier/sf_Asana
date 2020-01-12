@@ -30,12 +30,13 @@ class User implements UserInterface,\Serializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $role;
+    private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\role", inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $email;
+    private $Role;
 
     public function getId(): ?int
     {
@@ -71,9 +72,9 @@ class User implements UserInterface,\Serializable
      */
     public function getRoles()
     {
-        $role = [];
-        $role[] = $this->role;
-        return $role;
+//        $role = [];
+//        $role[] = $this->role;
+        return ['ROLE_ADMIN'];
     }
 
     /**
@@ -100,9 +101,13 @@ class User implements UserInterface,\Serializable
             $this->id,
             $this->username,
             $this->password,
-            $this->role,
             $this->email
         ]);
+    }
+
+    public function __toString()
+    {
+        return ucfirst($this->getUsername());
     }
 
     /**
@@ -114,21 +119,8 @@ class User implements UserInterface,\Serializable
             $this->id,
             $this->username,
             $this->password,
-            $this->role,
             $this->email
             ) = unserialize($serialized, ['allowed_classes' => false]);
-    }
-
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): self
-    {
-        $this->role = $role;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -139,6 +131,18 @@ class User implements UserInterface,\Serializable
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getRole(): ?role
+    {
+        return $this->Role;
+    }
+
+    public function setRole(?role $Role): self
+    {
+        $this->Role = $Role;
 
         return $this;
     }

@@ -26,6 +26,10 @@ body{
     font-size: 13px;
     font-weight: 400;
 }
+/*.navbar{*/
+/*    position: fixed;*/
+/*    margin-bottom: 50px;*/
+/*}*/
 
 .error_block{
     color:#AA3333;
