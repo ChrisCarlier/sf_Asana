@@ -33,7 +33,7 @@ class User implements UserInterface,\Serializable
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\role", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
      */
     private $Role;
@@ -140,9 +140,9 @@ class User implements UserInterface,\Serializable
         return $this->Role;
     }
 
-    public function setRole(?role $Role): self
+    public function setRole(?role $role): self
     {
-        $this->Role = $Role;
+        $this->Role = $role;
 
         return $this;
     }

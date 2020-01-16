@@ -33,9 +33,15 @@ class Role
      */
     private $users;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Right", inversedBy="roles")
+     */
+    private $rigths;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->rigths = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,6 +104,32 @@ class Role
             if ($user->getRole() === $this) {
                 $user->setRole(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Right[]
+     */
+    public function getRigths(): Collection
+    {
+        return $this->rigths;
+    }
+
+    public function addRigth(Right $rigth): self
+    {
+        if (!$this->rigths->contains($rigth)) {
+            $this->rigths[] = $rigth;
+        }
+
+        return $this;
+    }
+
+    public function removeRigth(Right $rigth): self
+    {
+        if ($this->rigths->contains($rigth)) {
+            $this->rigths->removeElement($rigth);
         }
 
         return $this;
