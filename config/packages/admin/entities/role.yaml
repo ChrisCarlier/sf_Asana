@@ -12,3 +12,4 @@ easy_admin:
         fields:
           - {property: 'role_key', type: 'text', label: 'Role key'}
           - {property: 'name', type: 'text', label: 'Nom'}
+          - { property: 'rights', type: 'easyadmin_autocomplete', type_options: { class: 'App\Entity\Right' } }

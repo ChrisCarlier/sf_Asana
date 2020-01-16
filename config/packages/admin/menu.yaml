@@ -12,3 +12,5 @@ easy_admin:
             label: 'Role'
             icon: 'user-tag'
             params: { sortField: 'Name' }
+          - entity: 'Right'
+            label: 'Droits'

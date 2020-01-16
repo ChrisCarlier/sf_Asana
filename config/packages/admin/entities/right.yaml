@@ -1,0 +1,7 @@
+easy_admin:
+  entities:
+    Right:
+      class: App\Entity\Right
+      form:
+        fields:
+          - {property: 'label', type: 'text', label: 'Nom'}

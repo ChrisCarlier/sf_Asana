@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% trans_default_domain 'project' %}
+
 {% block body %}
+    <h1>{{ 'project.list.title'|trans }}</h1>
     <div class="container">
+        {% if (is_granted('ROLE_PROJECT_SEARCH')) %}
             <div class="row form-search">
                 {{ form_start(form, {'attr': {'class': 'input-group'}}) }}
                     <div class="form-control">
@@ -10,16 +14,19 @@
                     <button class="input-group-append btn btn-info">Recherche</button>
                 {{ form_end(form) }}
             </div>
-        <div class="row">
-            {% for p in projects %}
-                <div class="card-container col-lg-3">
-                    <div class="card project-card bg-dark ">
-                        <a href="{{ path('projectId', {project: p.gid, name: p.name}) }}">
-                            {{ p.name }}
-                        </a>
+        {% endif %}
+        {% if is_granted('ROLE_PROJECT_LIST') %}
+            <div class="row">
+                {% for p in projects %}
+                    <div class="card-container col-lg-3">
+                        <div class="card project-card bg-dark ">
+                            <a href="{{ path('projectId', {project: p.gid, name: p.name}) }}">
+                                {{ p.name }}
+                            </a>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

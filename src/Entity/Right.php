@@ -19,18 +19,23 @@ class Right
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $label;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="rigths")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="rights")
      */
     private $roles;
 
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getLabel();
     }
 
     public function getId(): ?int
@@ -62,7 +67,7 @@ class Right
     {
         if (!$this->roles->contains($role)) {
             $this->roles[] = $role;
-            $role->addRigth($this);
+            $role->addRight($this);
         }
 
         return $this;
@@ -72,9 +77,11 @@ class Right
     {
         if ($this->roles->contains($role)) {
             $this->roles->removeElement($role);
-            $role->removeRigth($this);
+            $role->removeRight($this);
         }
 
         return $this;
     }
+
+
 }

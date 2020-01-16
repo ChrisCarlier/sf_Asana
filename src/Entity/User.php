@@ -72,9 +72,13 @@ class User implements UserInterface,\Serializable
      */
     public function getRoles()
     {
-//        $role = [];
-//        $role[] = $this->role;
-        return ['ROLE_ADMIN'];
+        $rights = [];
+        $rights[] = $this->getRole()->getRoleKey();
+        foreach($this->getRole()->getRights() as $right){
+            $rights[] = $right->getLabel();
+        }
+        dump($rights);
+        return $rights;
     }
 
     /**
@@ -135,12 +139,12 @@ class User implements UserInterface,\Serializable
         return $this;
     }
 
-    public function getRole(): ?role
+    public function getRole(): ?Role
     {
         return $this->Role;
     }
 
-    public function setRole(?role $role): self
+    public function setRole(?Role $role): self
     {
         $this->Role = $role;
 
