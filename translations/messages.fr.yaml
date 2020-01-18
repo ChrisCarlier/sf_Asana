@@ -1,0 +1,6 @@
+messages:
+  common:
+    email: E-mail
+  user:
+    title: Gestion utilisateurs
+    name: Nom utilisateur

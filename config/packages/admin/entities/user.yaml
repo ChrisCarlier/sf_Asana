@@ -2,14 +2,16 @@ easy_admin:
   entities:
     User:
       class: App\Entity\User
+
       list:
+        title: 'messages.user.title'
         fields:
-          - { property: 'Username'}
-          - { property: 'Email' }
+          - { property: 'Username', label: 'messages.user.name'}
+          - { property: 'Email', label: 'messages.common.email' }
           - { property: 'Role' }
 
       form:
         fields:
-          - {property: 'username', type: 'text', label: 'Nom utilisateur'}
+          - {property: 'username', type: 'text', label: 'messages.user.name'}
           - {property: 'email', type: 'text', label: 'Email'}
           - { property: 'role', type: 'easyadmin_autocomplete', type_options: { class: 'App\Entity\Role' } }
