@@ -30,12 +30,13 @@ class User implements UserInterface,\Serializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $role;
+    private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $email;
+    private $Role;
 
     public function getId(): ?int
     {
@@ -71,9 +72,13 @@ class User implements UserInterface,\Serializable
      */
     public function getRoles()
     {
-        $role = [];
-        $role[] = $this->role;
-        return $role;
+        $rights = [];
+        $rights[] = $this->getRole()->getRoleKey();
+        foreach($this->getRole()->getRights() as $right){
+            $rights[] = $right->getLabel();
+        }
+        dump($rights);
+        return $rights;
     }
 
     /**
@@ -100,7 +105,6 @@ class User implements UserInterface,\Serializable
             $this->id,
             $this->username,
             $this->password,
-            $this->role,
             $this->email
         ]);
     }
@@ -119,21 +123,8 @@ class User implements UserInterface,\Serializable
             $this->id,
             $this->username,
             $this->password,
-            $this->role,
             $this->email
             ) = unserialize($serialized, ['allowed_classes' => false]);
-    }
-
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): self
-    {
-        $this->role = $role;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -144,6 +135,18 @@ class User implements UserInterface,\Serializable
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->Role;
+    }
+
+    public function setRole(?Role $role): self
+    {
+        $this->Role = $role;
 
         return $this;
     }

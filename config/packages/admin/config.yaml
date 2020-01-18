@@ -1,2 +1,7 @@
 easy_admin:
-  site_name: 'Asana panel'
+  site_name: 'MyBIVTeam'
+  design:
+    brand_color: '#000'
+    assets:
+      css:
+        - 'CSS/admin.css'

@@ -1,0 +1,16 @@
+easy_admin:
+  design:
+    menu:
+      - label: 'Gestion utilisateur'
+        children:
+          - entity: 'User'
+            label: 'messages.user.title'
+            params: { sortField: 'username' }
+            icon: 'user'
+            default: true
+          - entity: 'Role'
+            label: 'Role'
+            icon: 'user-tag'
+            params: { sortField: 'Name' }
+          - entity: 'Right'
+            label: 'Droits'

@@ -1,0 +1,15 @@
+easy_admin:
+  entities:
+    Role:
+      class: App\Entity\Role
+      list:
+        fields:
+          - property: 'role_key'
+            label: 'Clé'
+          - property: 'Name'
+            label: 'Nom'
+      form:
+        fields:
+          - {property: 'role_key', type: 'text', label: 'Role key'}
+          - {property: 'name', type: 'text', label: 'Nom'}
+          - { property: 'rights', type: 'easyadmin_autocomplete', type_options: { class: 'App\Entity\Right' } }

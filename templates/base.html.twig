@@ -9,7 +9,7 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark">
             <a class="navbar-brand" href="{{ path('home') }}">Accueil</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,12 @@
                         <a class="nav-link {% if current_menu is defined and current_menu == 'projects' %}active{% endif %} "
                            href="{{ path('projects') }}">Projets</a>
                     </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if current_menu is defined and current_menu == 'admin' %}active{% endif %} "
+                               href="{{ path('admin') }}">Admin</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
 {#            {% if (is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')) %}#}
@@ -34,6 +40,8 @@
                         Déconnexion
                     </div>
                 </a>
+            {% else %}
+                <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
             {% endif %}
         </nav>
 
