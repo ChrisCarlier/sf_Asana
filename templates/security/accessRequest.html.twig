@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% trans_default_domain 'project' %}
+
+{% block title %}{{ 'project.demanderAcces'|trans }}{% endblock %}
+
+{% block body %}
+        {{ form_start(form) }}
+        <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+        </div>
+        <div class="container">
+                <div class="">
+                        {{ form_row(form.username, {'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="">
+                        {{ form_row(form.email, {'attr': {'class': 'form-control'} }) }}
+                </div>
+                <button class="btn btn-primary">{{ button|default('project.demanderAcces'|trans ) }}</button>
+        </div>
+        {{ form_end(form) }}
+{% endblock %}

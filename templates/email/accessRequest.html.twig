@@ -1,0 +1,87 @@
+{% apply inline_css %}
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>{{ email.subject }}</title>
+    <style>
+        body{
+            /*text-align: center;*/
+        }
+        img{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+        #account{
+            text-align: center;
+        }
+        #actions{
+            text-align: center;
+        }
+        h2{
+            color:#007bff;
+            font-weight: 700;
+            font-size: 25px;
+            text-decoration: underline;
+        }
+        .text{
+            color:#007bff;
+        }
+        h3{
+            color:#4c5367;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        ul{
+            list-style-position: inside;
+            list-style-type: square;
+        }
+        #links{
+            text-align: center;
+            padding-top:20px;
+        }
+        .bouton{
+            border:none;
+            padding:10px 10px 10px 10px;
+            border-radius:2px;
+            box-shadow:1px 1px 3px #aaa;
+            background:#28a745;
+            font:bold 13px Arial;
+            color:#fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <img src="{{ email.image('@images/sample_banner.png') }}" class="center" alt="My BIV">
+{#    <img src="{{ absolute_url(asset('images/sample_banner.png')) }}" class="center" alt="My BIV">#}
+    <div id="account">
+        <h2>Votre accès</h2>
+        <div class="text">
+            <h3>Compte utilisateur :</h3> {{ user }}
+        </div>
+        <div class="text">
+            <h3>Mot de passe :</h3> %password%
+        </div>
+        <div class="text">
+            <h3>Société :</h3> %project%
+        </div>
+    </div>
+    <div id="actions">
+        <h2>Vous pouvez désormais :</h2>
+        <ul>
+            <li>Vous connecter et changer votre mot de passe</li>
+            <li>Effectuer une demande d'intervention</li>
+            <li>Consulter vos demandes en cours</li>
+        </ul>
+    </div>
+    <div id="links">
+        <a href="{{ url('login') }}" class="bouton">Accéder au site</a>
+    </div>
+</body>
+</html>
+{% endapply %}

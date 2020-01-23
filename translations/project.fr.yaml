@@ -1,3 +1,6 @@
 project:
+  demanderAcces: Demander un accès
+  username: Nom utilisateur
+  email: E-mail
   list:
     title: Liste des projets
